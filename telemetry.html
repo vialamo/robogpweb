@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROBOGP - Telemetry</title>
+  <meta name="description" content="Telemetry data and analysis for ROBOGP events.">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <div id="navbar"></div>
+  <script>
+    fetch("navbar.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("navbar").innerHTML = data;
+
+        // hamburger menu toggle
+        const toggle = document.querySelector(".menu-toggle");
+        const navlinks = document.querySelector(".nav-links");
+
+        toggle.addEventListener("click", () => {
+          navlinks.classList.toggle("show");
+        });
+
+        // highlight active link after navbar is loaded
+        const current = window.location.pathname.split("/").pop();
+        const links = document.querySelectorAll("#navbar ul a");
+        links.forEach(link => {
+          if (link.getAttribute("href") === current) {
+            link.classList.add("active");
+          }
+        });
+      });
+  </script>
+
+  <main style="padding: 20px; max-width: 1200px; margin: 0 auto;">
+
+    <div id="telemetry-header"
+      style="display: flex; flex-wrap: wrap; gap: 20px; align-items: stretch; margin-bottom: 20px;">
+
+      <div id="telemetry-controls"
+        style="background: #efefef; padding: 15px 20px; border-radius: 8px; border: 1px solid #ddd;">
+        <label for="lap-selector" style="font-weight: bold; display: block; margin-bottom: 8px; color: #2c3e50;">Select
+          Lap:</label>
+        <select id="lap-selector"
+          style="padding: 8px 15px; font-size: 1rem; border: 1px solid #ccc; border-radius: 4px; cursor: pointer;"></select>
+      </div>
+
+      <div id="lap-stats"
+        style="flex: 1; display: flex; flex-wrap: wrap; gap: 20px; background: #f8f9fa; padding: 15px 20px; border-radius: 8px; border: 1px solid #ddd; color: #444;">
+      </div>
+
+    </div>
+
+    <div id="chart-speed-rpm-gear" style="width:100%; height:200px;"></div>
+    <div id="chart-inputs" style="width:100%; height:200px;"></div>
+    <div id="chart-wheels" style="width:100%; height:200px;"></div>
+    <div id="chart-suspension" style="width:100%; height:200px;"></div>
+
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+  <script src="https://cdn.plot.ly/plotly-2.27.0.min.js"></script>
+
+  <script>
+    const CSV_FILE_PATH = "telemetry.csv";
+
+    let globalData = [];
+
+    Papa.parse(CSV_FILE_PATH, {
+      download: true,
+      header: true,
+      dynamicTyping: true,
+      skipEmptyLines: true,
+      complete: function (results) {
+        globalData = results.data;
+        initializeTelemetry();
+      },
+      error: function (err) {
+        console.error("Error loading CSV:", err);
+        document.querySelector("main").innerHTML += "<p style='color:red;'>Failed to load telemetry data. Ensure telemetry.csv is uploaded.</p>";
+      }
+    });
+
+    function initializeTelemetry() {
+      const lapNames = [...new Set(globalData.map(row => row["Lap"]).filter(Boolean))];
+      const selector = document.getElementById("lap-selector");
+
+      lapNames.forEach(lap => {
+        const option = document.createElement("option");
+        option.value = lap;
+        option.textContent = lap;
+        selector.appendChild(option);
+      });
+
+      selector.addEventListener("change", (e) => {
+        drawCharts(e.target.value);
+      });
+
+      if (lapNames.length > 0) {
+        drawCharts(lapNames[0]);
+      }
+    }
+
+    function drawCharts(selectedLap) {
+      const lapData = globalData.filter(row => row["Lap"] === selectedLap);
+      const distance = lapData.map(row => row["Distance"]);
+
+      // --- CALCULATE AND UPDATE STATISTICS ---
+      if (lapData.length > 0) {
+        const topSpeed = Math.max(...lapData.map(row => row["Speed"])).toFixed(1);
+        const firstRow = lapData[0];
+        const lastRow = lapData[lapData.length - 1];
+
+        const startEnergy = firstRow["Energy"].toFixed(2);
+        const endEnergy = lastRow["Energy"].toFixed(2);
+
+        // Extract Lap Time directly from the lap name string
+        let lapTimeStr = "N/A";
+        if (selectedLap && selectedLap.includes('-')) {
+          const parts = selectedLap.split('-');
+          const rawTime = parts[parts.length - 1]; // Grabs the "2.22.595" part
+          
+          // Format it to M:SS.mmm
+          const timeSegments = rawTime.split('.');
+          if (timeSegments.length === 3) {
+            lapTimeStr = `${timeSegments[0]}:${timeSegments[1]}.${timeSegments[2]}`;
+          } else {
+            lapTimeStr = rawTime; // Fallback just in case it doesn't match exactly
+          }
+        }
+
+        const statsHtml = `
+          <div style="min-width: 100px;">
+            <div style="font-size: 0.8rem; text-transform: uppercase; color: #888; font-weight: bold;">Lap Time</div>
+            <div style="font-size: 1.4rem; font-weight: bold; color: #9B59B6;">${lapTimeStr}</div>
+          </div>
+          <div style="min-width: 100px;">
+            <div style="font-size: 0.8rem; text-transform: uppercase; color: #888; font-weight: bold;">Top Speed</div>
+            <div style="font-size: 1.4rem; font-weight: bold; color: #1f77b4;">${topSpeed} <span style="font-size: 0.9rem; font-weight: normal; color: #666;">km/h</span></div>
+          </div>
+          <div style="min-width: 100px;">
+            <div style="font-size: 0.8rem; text-transform: uppercase; color: #888; font-weight: bold;">Energy (Fuel)</div>
+            <div style="font-size: 1.1rem; font-weight: bold;">Start: <span style="color: #2ca02c;">${startEnergy}</span><span style="font-size: 0.9rem; font-weight: normal; color: #666;">L</span></div>
+            <div style="font-size: 1.1rem; font-weight: bold;">End: <span style="color: #d62728;">${endEnergy}</span><span style="font-size: 0.9rem; font-weight: normal; color: #666;">L</span></div>
+          </div>
+          <div style="min-width: 120px;">
+            <div style="font-size: 0.8rem; text-transform: uppercase; color: #888; font-weight: bold;">Front Tyres Temp</div>
+            <div style="font-size: 1rem;"><strong>FL:</strong> ${firstRow["Tyre temp[FL]"].toFixed(1)} &deg; &rarr; ${lastRow["Tyre temp[FL]"].toFixed(1)} &deg;</div>
+            <div style="font-size: 1rem;"><strong>FR:</strong> ${firstRow["Tyre temp[FR]"].toFixed(1)} &deg; &rarr; ${lastRow["Tyre temp[FR]"].toFixed(1)} &deg;</div>
+          </div>
+          <div style="min-width: 120px;">
+            <div style="font-size: 0.8rem; text-transform: uppercase; color: #888; font-weight: bold;">Rear Tyres Temp</div>
+            <div style="font-size: 1rem;"><strong>RL:</strong> ${firstRow["Tyre temp[RL]"].toFixed(1)} &deg; &rarr; ${lastRow["Tyre temp[RL]"].toFixed(1)} &deg;</div>
+            <div style="font-size: 1rem;"><strong>RR:</strong> ${firstRow["Tyre temp[RR]"].toFixed(1)} &deg; &rarr; ${lastRow["Tyre temp[RR]"].toFixed(1)} &deg;</div>
+          </div>
+        `;
+        document.getElementById("lap-stats").innerHTML = statsHtml;
+      }
+
+      // --- TRICK FOR PERFECT ALIGNMENT ---
+      // We force the X-axis to take exactly 0% to 92% of the width on ALL graphs.
+      const alignDomain = [0, 0.92]; 
+
+      // --- CHART 1: Speed, RPM, Gear ---
+      const traceSpeed = { x: distance, y: lapData.map(row => row["Speed"]), name: 'Speed', type: 'scatter', yaxis: 'y1', line: { color: '#1f77b4' } };
+      const traceRPM = { x: distance, y: lapData.map(row => row["Engine RPM"]), name: 'RPM', type: 'scatter', yaxis: 'y2', line: { color: '#ff7f0e' } };
+      const traceGear = { x: distance, y: lapData.map(row => row["Gear"]), name: 'Gear', type: 'scatter', yaxis: 'y3', line: { color: '#2ca02c', shape: 'hv' } };
+
+      const layout1 = {
+        xaxis: { showticklabels: false, domain: alignDomain },
+        yaxis: { title: 'Speed', titlefont: { color: '#1f77b4' }, tickfont: { color: '#1f77b4' } },
+        yaxis2: { title: 'RPM', titlefont: { color: '#ff7f0e' }, tickfont: { color: '#ff7f0e' }, overlaying: 'y', side: 'right', showgrid: false },
+        yaxis3: { title: 'Gear', titlefont: { color: '#2ca02c' }, tickfont: { color: '#2ca02c' }, overlaying: 'y', side: 'right', anchor: 'free', position: 1, showgrid: false },
+        margin: { l: 60, r: 120, t: 10, b: 0 },
+        hovermode: 'x unified'
+      };
+      Plotly.newPlot('chart-speed-rpm-gear', [traceSpeed, traceRPM, traceGear], layout1, { responsive: true });
+
+      // --- CHART 2: Steer, Throttle, Brake ---
+      const traceSteer = { x: distance, y: lapData.map(row => row["Steer"]), name: 'Steer', type: 'scatter', yaxis: 'y1', line: { color: '#e6c200' } };
+      const traceThrottle = { x: distance, y: lapData.map(row => row["Throttle"]), name: 'Throttle', type: 'scatter', yaxis: 'y2', line: { color: '#2ca02c' } };
+      const traceBrake = { x: distance, y: lapData.map(row => row["Brake"]), name: 'Brake', type: 'scatter', yaxis: 'y2', line: { color: '#d62728' } };
+
+      const layout2 = {
+        xaxis: { showticklabels: false, domain: alignDomain },
+        yaxis: { title: 'Steering' },
+        yaxis2: { title: 'Pedals', overlaying: 'y', side: 'right', range: [0, 1.1], showgrid: false },
+        margin: { l: 60, r: 120, t: 0, b: 0 }, 
+        hovermode: 'x unified'
+      };
+      Plotly.newPlot('chart-inputs', [traceSteer, traceThrottle, traceBrake], layout2, { responsive: true });
+
+      // --- CHART 3: Wheel speeds ---
+      const traceFLw = { x: distance, y: lapData.map(row => row["Wheel omega[FL]"]), name: 'Whl [FL]', type: 'scatter' };
+      const traceFRw = { x: distance, y: lapData.map(row => row["Wheel omega[FR]"]), name: 'Whl [FR]', type: 'scatter' };
+      const traceRLw = { x: distance, y: lapData.map(row => row["Wheel omega[RL]"]), name: 'Whl [RL]', type: 'scatter' };
+      const traceRRw = { x: distance, y: lapData.map(row => row["Wheel omega[RR]"]), name: 'Whl [RR]', type: 'scatter' };
+
+      const layout3 = {
+        xaxis: { showticklabels: false, domain: alignDomain },
+        yaxis: { title: 'Whl speed' },
+        margin: { l: 60, r: 120, t: 0, b: 0 }, 
+        hovermode: 'x unified'
+      };
+      Plotly.newPlot('chart-wheels', [traceFLw, traceFRw, traceRLw, traceRRw], layout3, { responsive: true });
+
+      // --- CHART 4: Suspension Displacements ---
+      const traceFL = { x: distance, y: lapData.map(row => row["Suspension travel[FL]"]), name: 'Sus [FL]', type: 'scatter' };
+      const traceFR = { x: distance, y: lapData.map(row => row["Suspension travel[FR]"]), name: 'Sus [FR]', type: 'scatter' };
+      const traceRL = { x: distance, y: lapData.map(row => row["Suspension travel[RL]"]), name: 'Sus [RL]', type: 'scatter' };
+      const traceRR = { x: distance, y: lapData.map(row => row["Suspension travel[RR]"]), name: 'Sus [RR]', type: 'scatter' };
+
+      const layout4 = {
+        xaxis: { title: 'Distance (m)', domain: alignDomain },
+        yaxis: { title: 'Travel' },
+        margin: { l: 60, r: 120, t: 0, b: 40 },
+        hovermode: 'x unified'
+      };
+      Plotly.newPlot('chart-suspension', [traceFL, traceFR, traceRL, traceRR], layout4, { responsive: true });
+
+      // --- X-AXIS ZOOM SYNCHRONIZATION ---
+      const charts = [
+        document.getElementById('chart-speed-rpm-gear'),
+        document.getElementById('chart-inputs'),
+        document.getElementById('chart-wheels'),
+        document.getElementById('chart-suspension')
+      ];
+
+      charts.forEach(chart => {
+        chart.on('plotly_relayout', (eventdata) => {
+          if (eventdata['xaxis.range[0]'] || eventdata['xaxis.autorange']) {
+            charts.forEach(otherChart => {
+              if (otherChart !== chart) {
+                Plotly.relayout(otherChart, {
+                  'xaxis.range[0]': eventdata['xaxis.range[0]'],
+                  'xaxis.range[1]': eventdata['xaxis.range[1]'],
+                  'xaxis.autorange': eventdata['xaxis.autorange']
+                });
+              }
+            });
+          }
+        });
+      });
+    }
+  </script>
+  <div id="footer"></div>
+  <script>
+    fetch("footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("footer").innerHTML = data;
+      });
+  </script>
+</body>
+
+</html>
