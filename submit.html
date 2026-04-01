@@ -17,91 +17,46 @@
   <style>
     .submit-container { padding: 20px; max-width: 900px; margin: 0 auto; }
     
-    .setup-form { margin-top: 30px; }
+    .setup-form { margin-top: 20px; }
     
-    .setup-fieldset { 
-      margin-bottom: 25px; 
-      padding: 20px; 
-      border: 1px solid #ccc; 
-      border-radius: 8px; 
-    }
-    
-    .setup-legend { 
-      font-weight: bold; 
-      padding: 0 10px; 
-      color: var(--bg-dark); 
-    }
-
+    .setup-fieldset { margin-bottom: 25px; padding: 20px; border: 1px solid #ccc; border-radius: 8px; }
+    .setup-legend { font-weight: bold; padding: 0 10px; color: var(--bg-dark); }
     .form-group { margin-bottom: 25px; }
     .form-group.last { margin-bottom: 10px; }
     .form-group.bordered { margin-bottom: 35px; border-bottom: 1px solid #eee; padding-bottom: 25px; }
-
-    .help-text { 
-      font-size: 0.85em; 
-      color: #555; 
-      margin-top: 2px; 
-      margin-bottom: 8px; 
-    }
-
-    /* Standard Inputs */
+    .help-text { font-size: 0.85em; color: #555; margin-top: 2px; margin-bottom: 8px; }
     .text-input { width: 100%; max-width: 300px; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
     .num-input { width: 100px; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
-    
-    /* Sliders & Grids */
-    .slider-grid { 
-      display: grid; 
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
-      gap: 20px; 
-    }
+    .slider-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; }
     .slider-input { width: 100%; }
     .slider-single { width: 100%; max-width: 400px; }
-
-    /* Front/Rear Labels and Values */
-    .label-front { font-size: 0.85em; font-weight: bold; color: #1f77b4; }
-    .label-rear { font-size: 0.85em; font-weight: bold; color: #1f77b4; } /* Matches front per your code */
+    .label-front, .label-rear { font-size: 0.85em; font-weight: bold; color: #1f77b4; }
     .val-display { color: #333; font-weight: normal; }
 
-    /* Form Buttons Layout */
-    .form-actions {
+    /* --- UPDATED HEADER/BUTTONS LAYOUT --- */
+    .header-actions-row {
       display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
       gap: 15px;
-      justify-content: center;
-      max-width: 500px;
-      margin: 0 auto;
-      flex-wrap: wrap; /* Allows stacking on very small screens */
+      margin-bottom: 25px;
     }
-
-    /* Big Green Button */
-    .submit-btn {
-      padding: 14px 28px; 
-      font-size: 1.1em; 
-      background-color: var(--color-green); 
-      color: white; 
-      border: none; 
-      border-radius: 6px; 
-      cursor: pointer; 
-      font-weight: bold; 
-      box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
-      flex: 1; /* Allows button to grow */
-      min-width: 200px;
+    .header-actions-row p {
+      margin: 0;
+      color: #444;
+      font-size: 1.05em;
     }
+    .top-actions { display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+    
+    /* Bottom Form Actions */
+    .form-actions { display: flex; gap: 15px; justify-content: center; max-width: 700px; margin: 0 auto; flex-wrap: wrap; margin-top: 10px;}
+    
+    .submit-btn { padding: 14px 28px; font-size: 1.1em; background-color: var(--color-green); color: white; border: none; border-radius: 6px; cursor: pointer; font-weight: bold; box-shadow: 0 4px 6px rgba(0,0,0,0.1); flex: 2; min-width: 250px; }
     .submit-btn:hover { background-color: #248a24; }
-
-    /* Reset Button */
-    .reset-btn {
-      padding: 14px 28px; 
-      font-size: 1.1em; 
-      background-color: #f1f3f4; 
-      color: #333; 
-      border: 1px solid #ccc; 
-      border-radius: 6px; 
-      cursor: pointer; 
-      font-weight: bold; 
-      box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
-      flex: 1;
-      min-width: 200px;
-    }
-    .reset-btn:hover { background-color: #e2e6ea; }
+    
+    .action-btn { padding: 10px 16px; font-size: 0.9em; background-color: #f1f3f4; color: #333; border: 1px solid #ccc; border-radius: 6px; cursor: pointer; font-weight: bold; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+    .action-btn:hover { background-color: #e2e6ea; }
   </style>
 </head>
 
@@ -133,20 +88,31 @@
 
   <main class="submit-container">
 
-    <div class="page-header" style="margin-top: 20px;">
-      <p style="text-transform: none;">Configure your vehicle and driver parameters for the upcoming session</p>
-    </div>
-
     <form action="#" method="POST" class="setup-form">
+
+      <div class="header-actions-row">
+        <p>Configure your vehicle for the upcoming session</p>
+        
+        <div class="top-actions">
+          <input type="file" id="load_file" accept=".json" style="display:none;" onchange="loadSetupFile(event)">
+          <button type="button" class="action-btn" onclick="document.getElementById('load_file').click()">Load Setup</button>
+          <button type="button" class="action-btn" onclick="saveSetupFile()">Save Setup</button>
+          <button type="button" class="action-btn" onclick="resetFormDefaults()">Reset</button>
+        </div>
+      </div>
 
       <fieldset class="setup-fieldset">
         <legend class="setup-legend">Driver Information</legend>
-        
         <label for="driver_name"><strong>Driver / Team Name:</strong></label><br>
         <input type="text" id="driver_name" name="driver_name" required class="text-input">
 
         <div style="margin-top: 15px;">
-          <label for="driver_email"><strong>Email <span style="font-weight: normal; font-size: 0.9em; color: #666;">(Optional - to receive a copy)</span>:</strong></label><br>
+          <label for="secret_code"><strong>Secret Code:</strong></label><br>
+          <input type="password" id="secret_code" name="secret_code" required class="text-input" placeholder="Enter league password">
+        </div>
+
+        <div style="margin-top: 15px;">
+          <label for="driver_email"><strong>Email <span style="font-weight: normal; font-size: 0.9em; color: #666;">(Optional)</span>:</strong></label><br>
           <input type="email" id="driver_email" name="driver_email" class="text-input" placeholder="team@example.com">
         </div>
       </fieldset>
@@ -156,7 +122,6 @@
 
         <div class="form-group">
           <label><strong>Suspension Stiffness</strong></label>
-          <p class="help-text">Affects springs. Higher = faster chassis movements but can cause tyres to skip over bumps.</p>
           <div class="slider-grid">
             <div>
               <label class="label-front">FRONT: <span id="val_suspension_stiffness_front" class="val-display">90 N/mm</span></label><br>
@@ -171,7 +136,6 @@
 
         <div class="form-group">
           <label><strong>Suspension Damping</strong></label>
-          <p class="help-text">Controls mass compression speed. Affects weight transfer during corner Entry, Apex, and Exit.</p>
           <div class="slider-grid">
             <div>
               <label class="label-front">FRONT COMPRESSION: <span id="val_suspension_damping_front" class="val-display">4.0 Ns/mm</span></label><br>
@@ -182,7 +146,7 @@
               <input type="range" id="suspension_damping_rear" name="suspension_damping_rear" min="10" max="120" value="40" class="slider-input" oninput="document.getElementById('val_suspension_damping_rear').innerText = this.value / 10 + ' Ns/mm'">
             </div>
           </div>
-          <div class="slider-grid">
+          <div class="slider-grid" style="margin-top: 15px;">
             <div>
               <label class="label-front">FRONT EXTENSION: <span id="val_suspension_dampingex_front" class="val-display">8.0 Ns/mm</span></label><br>
               <input type="range" id="suspension_dampingex_front" name="suspension_dampingex_front" min="10" max="120" value="80" class="slider-input" oninput="document.getElementById('val_suspension_dampingex_front').innerText = this.value / 10 + ' Ns/mm'">
@@ -196,7 +160,6 @@
 
         <div class="form-group">
           <label><strong>Anti-roll Bar Stiffness</strong></label>
-          <p class="help-text">Controls mass moved side-to-side. Stiff = increased stability, decreased traction.</p>
           <div class="slider-grid">
             <div>
               <label class="label-front">FRONT: <span id="val_anti_roll_front" class="val-display">90 N/mm</span></label><br>
@@ -211,7 +174,6 @@
 
         <div class="form-group">
           <label><strong>Ride Height</strong></label>
-          <p class="help-text">Distance to ground. Lower = better handling, but too low causes bottoming out.</p>
           <div class="slider-grid">
             <div>
               <label class="label-front">FRONT: <span id="val_ride_height_front" class="val-display">5.0 cm</span></label><br>
@@ -226,7 +188,6 @@
 
         <div class="form-group">
           <label><strong>Camber</strong></label>
-          <p class="help-text">Negative camber = faster straights, reduced braking/accelerating abilities.</p>
           <div class="slider-grid">
             <div>
               <label class="label-front">FRONT: <span id="val_camber_front" class="val-display">-2.5 Deg</span></label><br>
@@ -241,7 +202,6 @@
 
         <div class="form-group">
           <label><strong>Tire Pressure</strong></label>
-          <p class="help-text">Higher = more straight speed. Lower = more grip and faster cornering.</p>
           <div class="slider-grid">
             <div>
               <label class="label-front">FRONT: <span id="val_tire_pressure_front" class="val-display">125 kPa</span></label><br>
@@ -256,7 +216,6 @@
 
         <div class="form-group bordered">
           <label><strong>Aerodynamic Setup (Wing angle)</strong></label>
-          <p class="help-text">Higher = faster cornering, more drag (slower straights).</p>
           <div class="slider-grid">
             <div>
               <label class="label-front">FRONT: <span id="val_aero_front" class="val-display">10 Deg</span></label><br>
@@ -272,19 +231,16 @@
         <div class="form-group">
           <label><strong>Final Ratio (Gearing): <span id="val_final_ratio" class="val-display">3.529</span></strong></label><br>
           <input type="range" id="final_ratio" name="final_ratio" min="800" max="4000" value="3529" class="slider-single" oninput="document.getElementById('val_final_ratio').innerText = this.value / 1000.0">
-          <p class="help-text">Smaller values = longer gears (top speed). Larger values = acceleration.</p>
         </div>
 
         <div class="form-group">
           <label><strong>Brake Force: <span id="val_brake_force" class="val-display">700 Nm</span></strong></label><br>
           <input type="range" id="brake_force" name="brake_force" min="500" max="1400" value="700" class="slider-single" oninput="document.getElementById('val_brake_force').innerText = this.value + ' Nm'">
-          <p class="help-text">Maximum pressure. Optimal setting avoids locking until right before turning.</p>
         </div>
 
         <div class="form-group last">
           <label><strong>Brake Balance (Rear to Front): <span id="val_brake_balance" class="val-display">65%</span></strong></label><br>
           <input type="range" id="brake_balance" name="brake_balance" min="1" max="100" value="65" class="slider-single" oninput="document.getElementById('val_brake_balance').innerText = this.value + '%'">
-          <p class="help-text">Higher = more front bias. Adjust based on which wheels are locking first.</p>
         </div>
       </fieldset>
 
@@ -294,71 +250,177 @@
         <div class="form-group">
           <label><strong>Conservative Speed Estimation: <span id="val_algo_speed" class="val-display">0%</span></strong></label><br>
           <input type="range" id="algo_speed" name="algo_speed" min="-100" max="100" value="0" class="slider-single" oninput="document.getElementById('val_algo_speed').innerText = this.value+ '%'">
-          <p class="help-text">Positive = slower/safer. Negative = overestimates speed, aggressive, higher accident risk.</p>
         </div>
 
         <div class="form-group">
           <label><strong>Conservative Throttle: <span id="val_algo_throttle" class="val-display">0%</span></strong></label><br>
           <input type="range" id="algo_throttle" name="algo_throttle" min="-100" max="100" value="0" class="slider-single" oninput="document.getElementById('val_algo_throttle').innerText = this.value+ '%'">
-          <p class="help-text">Positive = avoids wheel spin (safer/slower). Negative = aggressive throttle.</p>
         </div>
 
         <div class="form-group last">
           <label><strong>Conservative Braking: <span id="val_algo_braking" class="val-display">0%</span></strong></label><br>
           <input type="range" id="algo_braking" name="algo_braking" min="-100" max="100" value="0" class="slider-single" oninput="document.getElementById('val_algo_braking').innerText = this.value + '%'">
-          <p class="help-text">Positive = avoids locking, longer brake distance. Negative = aggressive, risks locking.</p>
         </div>
       </fieldset>
 
       <fieldset class="setup-fieldset">
         <legend class="setup-legend">Strategy Parameters</legend>
-
+        
         <div class="form-group last">
-          <label for="pit_lap"><strong>Target Pit Stop Lap:</strong></label><br>
-          <input type="number" id="pit_lap" name="pit_lap" min="1" max="150" class="num-input">
-          <p class="help-text" style="margin-top: 5px;">Energy load is auto-computed based on this lap. Consider traffic and tire wear.</p>
+          <label for="stint_list"><strong>Stint List (Liters of fuel):</strong></label><br>
+          <input type="text" id="stint_list" name="stint_list" class="text-input" placeholder="e.g. 7.9,3.1" required>
         </div>
       </fieldset>
 
       <div class="form-actions">
-        <button type="button" class="reset-btn" onclick="resetFormDefaults()">
-          Reset to Default
-        </button>
-        <button type="button" class="submit-btn">
-          Submit Setup to Race Control
-        </button>
+        <button type="button" class="submit-btn" id="submit_btn">Submit to Race Control</button>
       </div>
 
     </form>
-
   </main>
-  
-  <div id="footer"></div>
-  
+
   <script>
-    // Navbar / Footer scripts
-    fetch("footer.html")
-      .then(response => response.text())
-      .then(data => {
-        document.getElementById("footer").innerHTML = data;
+    // --- GOOGLE SCRIPT URL ---
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby4uf1lutsCCjePPvu5dKOIMWRpXObXSJtqw75v9xQFQSN5JnzDRBGFwl4H2k5Sl3QIAg/exec";
+
+    const submitBtn = document.getElementById('submit_btn');
+    const form = document.querySelector('.setup-form');
+
+    // 1. Math function to convert real slider value to 0.0 - 1.0 based on min/max
+    function normalize(id) {
+      const el = document.getElementById(id);
+      const val = parseFloat(el.value);
+      const min = parseFloat(el.min);
+      const max = parseFloat(el.max);
+      return ((val - min) / (max - min)).toFixed(3);
+    }
+
+    // 2. Generate the Normalized XML Output
+    function generateNormalizedXML() {
+      return `<Setup suspStiffnessFront="${normalize('suspension_stiffness_front')}" suspStiffnessRear="${normalize('suspension_stiffness_rear')}"
+ suspDampCompressionFront="${normalize('suspension_damping_front')}" suspDampCompressionRear="${normalize('suspension_damping_rear')}"
+ suspDampDecompressionFront="${normalize('suspension_dampingex_front')}" suspDampDecompressionRear="${normalize('suspension_dampingex_rear')}"
+ rollStiffnessFront="${normalize('anti_roll_front')}" rollStiffnessRear="${normalize('anti_roll_rear')}"
+ rideHeightFront="${normalize('ride_height_front')}" rideHeightRear="${normalize('ride_height_rear')}"
+ camberFront="${normalize('camber_front')}" camberRear="${normalize('camber_rear')}"
+ tyrePressureFront="${normalize('tire_pressure_front')}" tyrePressureRear="${normalize('tire_pressure_rear')}"
+ aeroSetFront="${normalize('aero_front')}" aeroSetRear="${normalize('aero_rear')}"
+ brakeForce="${normalize('brake_force')}" brakeBias="${normalize('brake_balance')}"
+ finalRatio="${normalize('final_ratio')}" tyreType="0" />
+
+<Driver conservativeSpeedEstimation="${normalize('algo_speed')}"
+ conservativeTrackLimits="0.5"
+ conservativeFightingLateralSpace="0.5"
+ conservativeFightingLongitudinalSpace="0.5"
+ avoidThrottleWheelSpin="${normalize('algo_throttle')}"
+ avoidBrakeWheelLock="${normalize('algo_braking')}"
+ avoidSteerSlip="0.625" />
+
+<Strategy stintList="${document.getElementById('stint_list').value}" />`;
+    }
+
+    // 3. Save Local File (JSON)
+    function saveSetupFile() {
+      const formData = new FormData(form);
+      const setupData = {};
+      formData.forEach((value, key) => {
+        // Save everything except the secret code
+        if (key !== 'secret_code') setupData[key] = value;
       });
 
-    // Custom Reset Function
+      const blob = new Blob([JSON.stringify(setupData, null, 2)], { type: "application/json" });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "robogp_setup.json";
+      link.click();
+    }
+
+    // 4. Load Local File (JSON)
+    function loadSetupFile(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const data = JSON.parse(e.target.result);
+          for (const key in data) {
+            const el = document.getElementById(key);
+            if (el) {
+              el.value = data[key];
+              // Fire input event to instantly update the visible span values
+              el.dispatchEvent(new Event('input')); 
+            }
+          }
+        } catch (err) {
+          alert("Invalid setup file format.");
+        }
+      };
+      reader.readAsText(file);
+      // Reset the file input so they can load the same file again if needed
+      event.target.value = ""; 
+    }
+
+    // 5. Submit to Google Sheets
+    submitBtn.addEventListener('click', () => {
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      const originalText = submitBtn.innerText;
+      submitBtn.innerText = "Sending to Race Control...";
+      submitBtn.style.backgroundColor = "#555";
+      submitBtn.disabled = true;
+
+      // Package the data for Google Script
+      const finalData = new FormData();
+      finalData.append('driver_name', document.getElementById('driver_name').value);
+      finalData.append('driver_email', document.getElementById('driver_email').value);
+      finalData.append('secret_code', document.getElementById('secret_code').value);
+      finalData.append('setup_xml', generateNormalizedXML()); // Adds the giant XML block
+
+      fetch(GOOGLE_SCRIPT_URL, {
+        method: 'POST',
+        body: finalData
+      })
+        .then(response => response.text())
+        .then(data => {
+          if (data === "Success") {
+            alert("Setup successfully submitted to Race Control!");
+            document.getElementById('secret_code').value = ''; // Just clear the password
+          } else {
+            alert("Submission failed: " + data);
+          }
+        })
+        .catch(error => {
+          console.error("Caught an error:", error);
+          alert("Something went wrong. Check the console.");
+        })
+        .finally(() => {
+          submitBtn.innerText = originalText;
+          submitBtn.style.backgroundColor = "var(--color-green)";
+          submitBtn.disabled = false;
+        });
+    });
+
+    // 6. Reset Form
     function resetFormDefaults() {
-      // Find every input inside the form EXCEPT the driver name field
-      const inputs = document.querySelectorAll('.setup-form input:not(#driver_name)');
-      
+      const inputs = document.querySelectorAll('.setup-form input:not(#driver_name, #driver_email)');
       inputs.forEach(input => {
-        // If it is a slider or a number input, reset it to its HTML default value
-        if (input.type === 'range' || input.type === 'number') {
+        if (input.type === 'range' || input.type === 'number' || input.type === 'text') {
           input.value = input.defaultValue;
-          
-          // Dispatch an 'input' event to instantly trigger the inline oninput="..." logic
-          // This ensures the <span> elements update automatically without needing extra code!
           input.dispatchEvent(new Event('input'));
         }
       });
     }
+  </script>
+
+  <div id="footer"></div>
+  <script>
+    fetch("footer.html")
+      .then(response => response.text())
+      .then(data => document.getElementById("footer").innerHTML = data);
   </script>
 </body>
 
