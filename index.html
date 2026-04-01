@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROBOGP</title>
+  <meta name="description" content="The official ROBOGP website. Virtual robotic motorsport events">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SportsOrganization",
+    "name": "ROBOGP",
+    "url": "https://www.robogp.org",
+    "logo": "https://www.robogp.org/logo.svg",
+    "description": "An AI racing simulation platform and community organizing championships for computer-controlled cars.",
+    "sport": "Sim Racing"
+  }
+  </script>
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="navbar"></div>
+  <script>
+    fetch("navbar.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("navbar").innerHTML = data;
+        const toggle = document.querySelector(".menu-toggle");
+        const navlinks = document.querySelector(".nav-links");
+        if (toggle && navlinks) {
+          toggle.addEventListener("click", () => navlinks.classList.toggle("show"));
+        }
+        const current = window.location.pathname.split("/").pop() || "index.html";
+        document.querySelectorAll("#navbar ul a").forEach(link => {
+          if (link.getAttribute("href") === current) link.classList.add("active");
+        });
+      });
+  </script>
+
+  <main>
+    <section>
+      <div class="layout-container">
+        <div class="col-left">
+          <h1>Welcome to our sim-racing platform</h1>
+          <p>We organize championships for computer controlled cars in a simulation environment.</p>
+          <p>Our goal is to form a racing community and to have fun.</p>
+          <img src="logo.svg" alt="ROBOGP AI Racing Simulation" class="hero-logo fluid-img">
+        </div>
+        <div class="col-right">
+          <img src="robogp-shot.jpg" alt="Sim racing track" class="fluid-img">
+        </div>
+      </div>
+    </section>
+
+    <section class="event-section">
+      <div class="layout-container" style="align-items: center;">
+        
+        <div class="col-left">
+          
+          <div class="event-header" style="margin-bottom: 1.5rem;">
+            <div class="event-badge" style="color: #ffffff; border-right-color: rgba(255, 255, 255, 0.3);">E1</div>
+            <div class="event-info">
+              <h2 style="color: #ffffff; font-size: 2.2rem; margin: 0 0 5px 0; line-height: 1; letter-spacing: 1px; text-transform: uppercase;">Barcelona</h2>
+              <p style="color: rgba(255, 255, 255, 0.85); margin: 0; font-size: 1.1rem; font-weight: 500; letter-spacing: 0.5px;">March 26</p>
+            </div>
+          </div>
+
+          <div style="margin-top: 2.5rem;">
+            <p style="margin-bottom: 5px; color: rgba(255, 255, 255, 0.85); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Race Start</p>
+            <p class="bold-time" style="font-size: 1.3rem; margin-bottom: 1.5rem; margin-top: 0;">22:30 CET</p>
+            
+            <p style="margin-bottom: 5px; color: rgba(255, 255, 255, 0.85); text-transform: uppercase; font-size: 0.9rem; letter-spacing: 1px;">Send specifications before</p>
+            <p class="bold-time" style="font-size: 1.3rem; margin-top: 0;">18:00 CET</p>
+          </div>
+
+        </div>
+
+        <div class="col-right">
+          <div class="video-wrapper">
+            <iframe src="https://www.youtube.com/embed/io8gRg1MFFk?si=3S6blytAHCIj4hKH" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+          </div>
+        </div>
+        
+      </div>
+    </section>
+  </main>
+  
+  <div id="footer"></div>
+  <script>
+    // Just add this block right below your existing navbar script!
+    fetch("footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("footer").innerHTML = data;
+      });
+  </script>
+</body>
+</html>

@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROBOGP - Submit</title>
+  <meta name="description" content="ROBOGP submit competitors specifications.">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+
+  <style>
+    .submit-container { padding: 20px; max-width: 900px; margin: 0 auto; }
+    
+    .setup-form { margin-top: 30px; }
+    
+    .setup-fieldset { 
+      margin-bottom: 25px; 
+      padding: 20px; 
+      border: 1px solid #ccc; 
+      border-radius: 8px; 
+    }
+    
+    .setup-legend { 
+      font-weight: bold; 
+      padding: 0 10px; 
+      color: var(--bg-dark); 
+    }
+
+    .form-group { margin-bottom: 25px; }
+    .form-group.last { margin-bottom: 10px; }
+    .form-group.bordered { margin-bottom: 35px; border-bottom: 1px solid #eee; padding-bottom: 25px; }
+
+    .help-text { 
+      font-size: 0.85em; 
+      color: #555; 
+      margin-top: 2px; 
+      margin-bottom: 8px; 
+    }
+
+    /* Standard Inputs */
+    .text-input { width: 100%; max-width: 300px; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+    .num-input { width: 100px; padding: 8px; margin-top: 5px; border: 1px solid #ccc; border-radius: 4px; }
+    
+    /* Sliders & Grids */
+    .slider-grid { 
+      display: grid; 
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); 
+      gap: 20px; 
+    }
+    .slider-input { width: 100%; }
+    .slider-single { width: 100%; max-width: 400px; }
+
+    /* Front/Rear Labels and Values */
+    .label-front { font-size: 0.85em; font-weight: bold; color: #1f77b4; }
+    .label-rear { font-size: 0.85em; font-weight: bold; color: #1f77b4; } /* Matches front per your code */
+    .val-display { color: #333; font-weight: normal; }
+
+    /* Form Buttons Layout */
+    .form-actions {
+      display: flex;
+      gap: 15px;
+      justify-content: center;
+      max-width: 500px;
+      margin: 0 auto;
+      flex-wrap: wrap; /* Allows stacking on very small screens */
+    }
+
+    /* Big Green Button */
+    .submit-btn {
+      padding: 14px 28px; 
+      font-size: 1.1em; 
+      background-color: var(--color-green); 
+      color: white; 
+      border: none; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-weight: bold; 
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1); 
+      flex: 1; /* Allows button to grow */
+      min-width: 200px;
+    }
+    .submit-btn:hover { background-color: #248a24; }
+
+    /* Reset Button */
+    .reset-btn {
+      padding: 14px 28px; 
+      font-size: 1.1em; 
+      background-color: #f1f3f4; 
+      color: #333; 
+      border: 1px solid #ccc; 
+      border-radius: 6px; 
+      cursor: pointer; 
+      font-weight: bold; 
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+      flex: 1;
+      min-width: 200px;
+    }
+    .reset-btn:hover { background-color: #e2e6ea; }
+  </style>
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+  <script>
+    fetch("navbar.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("navbar").innerHTML = data;
+
+        const toggle = document.querySelector(".menu-toggle");
+        const navlinks = document.querySelector(".nav-links");
+
+        toggle.addEventListener("click", () => {
+          navlinks.classList.toggle("show");
+        });
+
+        const current = window.location.pathname.split("/").pop();
+        const links = document.querySelectorAll("#navbar ul a");
+        links.forEach(link => {
+          if (link.getAttribute("href") === current) {
+            link.classList.add("active");
+          }
+        });
+      });
+  </script>
+
+  <main class="submit-container">
+
+    <div class="page-header" style="margin-top: 20px;">
+      <p style="text-transform: none;">Configure your vehicle and driver parameters for the upcoming session</p>
+    </div>
+
+    <form action="#" method="POST" class="setup-form">
+
+      <fieldset class="setup-fieldset">
+        <legend class="setup-legend">Driver Information</legend>
+        
+        <label for="driver_name"><strong>Driver / Team Name:</strong></label><br>
+        <input type="text" id="driver_name" name="driver_name" required class="text-input">
+
+        <div style="margin-top: 15px;">
+          <label for="driver_email"><strong>Email <span style="font-weight: normal; font-size: 0.9em; color: #666;">(Optional - to receive a copy)</span>:</strong></label><br>
+          <input type="email" id="driver_email" name="driver_email" class="text-input" placeholder="team@example.com">
+        </div>
+      </fieldset>
+
+      <fieldset class="setup-fieldset">
+        <legend class="setup-legend">Vehicle Setup Parameters</legend>
+
+        <div class="form-group">
+          <label><strong>Suspension Stiffness</strong></label>
+          <p class="help-text">Affects springs. Higher = faster chassis movements but can cause tyres to skip over bumps.</p>
+          <div class="slider-grid">
+            <div>
+              <label class="label-front">FRONT: <span id="val_suspension_stiffness_front" class="val-display">90 N/mm</span></label><br>
+              <input type="range" id="suspension_stiffness_front" name="suspension_stiffness_front" min="60" max="150" value="90" class="slider-input" oninput="document.getElementById('val_suspension_stiffness_front').innerText = this.value + ' N/mm'">
+            </div>
+            <div>
+              <label class="label-rear">REAR: <span id="val_suspension_stiffness_rear" class="val-display">90 N/mm</span></label><br>
+              <input type="range" id="suspension_stiffness_rear" name="suspension_stiffness_rear" min="60" max="150" value="90" class="slider-input" oninput="document.getElementById('val_suspension_stiffness_rear').innerText = this.value + ' N/mm'">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label><strong>Suspension Damping</strong></label>
+          <p class="help-text">Controls mass compression speed. Affects weight transfer during corner Entry, Apex, and Exit.</p>
+          <div class="slider-grid">
+            <div>
+              <label class="label-front">FRONT COMPRESSION: <span id="val_suspension_damping_front" class="val-display">4.0 Ns/mm</span></label><br>
+              <input type="range" id="suspension_damping_front" name="suspension_damping_front" min="10" max="120" value="40" class="slider-input" oninput="document.getElementById('val_suspension_damping_front').innerText = this.value / 10 + ' Ns/mm'">
+            </div>
+            <div>
+              <label class="label-rear">REAR COMPRESSION: <span id="val_suspension_damping_rear" class="val-display">4.0 Ns/mm</span></label><br>
+              <input type="range" id="suspension_damping_rear" name="suspension_damping_rear" min="10" max="120" value="40" class="slider-input" oninput="document.getElementById('val_suspension_damping_rear').innerText = this.value / 10 + ' Ns/mm'">
+            </div>
+          </div>
+          <div class="slider-grid">
+            <div>
+              <label class="label-front">FRONT EXTENSION: <span id="val_suspension_dampingex_front" class="val-display">8.0 Ns/mm</span></label><br>
+              <input type="range" id="suspension_dampingex_front" name="suspension_dampingex_front" min="10" max="120" value="80" class="slider-input" oninput="document.getElementById('val_suspension_dampingex_front').innerText = this.value / 10 + ' Ns/mm'">
+            </div>
+            <div>
+              <label class="label-rear">REAR EXTENSION: <span id="val_suspension_dampingex_rear" class="val-display">8.0 Ns/mm</span></label><br>
+              <input type="range" id="suspension_dampingex_rear" name="suspension_dampingex_rear" min="10" max="120" value="80" class="slider-input" oninput="document.getElementById('val_suspension_dampingex_rear').innerText = this.value / 10 + ' Ns/mm'">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label><strong>Anti-roll Bar Stiffness</strong></label>
+          <p class="help-text">Controls mass moved side-to-side. Stiff = increased stability, decreased traction.</p>
+          <div class="slider-grid">
+            <div>
+              <label class="label-front">FRONT: <span id="val_anti_roll_front" class="val-display">90 N/mm</span></label><br>
+              <input type="range" id="anti_roll_front" name="anti_roll_front" min="0" max="140" value="90" class="slider-input" oninput="document.getElementById('val_anti_roll_front').innerText = this.value + ' N/mm'">
+            </div>
+            <div>
+              <label class="label-rear">REAR: <span id="val_anti_roll_rear" class="val-display">5 N/mm</span></label><br>
+              <input type="range" id="anti_roll_rear" name="anti_roll_rear" min="0" max="140" value="5" class="slider-input" oninput="document.getElementById('val_anti_roll_rear').innerText = this.value + ' N/mm'">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label><strong>Ride Height</strong></label>
+          <p class="help-text">Distance to ground. Lower = better handling, but too low causes bottoming out.</p>
+          <div class="slider-grid">
+            <div>
+              <label class="label-front">FRONT: <span id="val_ride_height_front" class="val-display">5.0 cm</span></label><br>
+              <input type="range" id="ride_height_front" name="ride_height_front" min="40" max="70" value="50" class="slider-input" oninput="document.getElementById('val_ride_height_front').innerText = this.value / 10 + ' cm'">
+            </div>
+            <div>
+              <label class="label-rear">REAR: <span id="val_ride_height_rear" class="val-display">5.0 cm</span></label><br>
+              <input type="range" id="ride_height_rear" name="ride_height_rear" min="40" max="70" value="50" class="slider-input" oninput="document.getElementById('val_ride_height_rear').innerText = this.value / 10 + ' cm'">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label><strong>Camber</strong></label>
+          <p class="help-text">Negative camber = faster straights, reduced braking/accelerating abilities.</p>
+          <div class="slider-grid">
+            <div>
+              <label class="label-front">FRONT: <span id="val_camber_front" class="val-display">-2.5 Deg</span></label><br>
+              <input type="range" id="camber_front" name="camber_front" min="-50" max="0" value="-25" class="slider-input" oninput="document.getElementById('val_camber_front').innerText = this.value / 10.0 + ' Deg'">
+            </div>
+            <div>
+              <label class="label-rear">REAR: <span id="val_camber_rear" class="val-display">-1.5 Deg</span></label><br>
+              <input type="range" id="camber_rear" name="camber_rear" min="-50" max="0" value="-15" class="slider-input" oninput="document.getElementById('val_camber_rear').innerText = this.value / 10.0 + ' Deg'">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label><strong>Tire Pressure</strong></label>
+          <p class="help-text">Higher = more straight speed. Lower = more grip and faster cornering.</p>
+          <div class="slider-grid">
+            <div>
+              <label class="label-front">FRONT: <span id="val_tire_pressure_front" class="val-display">125 kPa</span></label><br>
+              <input type="range" id="tire_pressure_front" name="tire_pressure_front" min="85" max="165" value="125" class="slider-input" oninput="document.getElementById('val_tire_pressure_front').innerText = this.value + ' kPa'">
+            </div>
+            <div>
+              <label class="label-rear">REAR: <span id="val_tire_pressure_rear" class="val-display">110 kPa</span></label><br>
+              <input type="range" id="tire_pressure_rear" name="tire_pressure_rear" min="70" max="150" value="110" class="slider-input" oninput="document.getElementById('val_tire_pressure_rear').innerText = this.value + ' kPa'">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group bordered">
+          <label><strong>Aerodynamic Setup (Wing angle)</strong></label>
+          <p class="help-text">Higher = faster cornering, more drag (slower straights).</p>
+          <div class="slider-grid">
+            <div>
+              <label class="label-front">FRONT: <span id="val_aero_front" class="val-display">10 Deg</span></label><br>
+              <input type="range" id="aero_front" name="aero_front" min="0" max="20" value="10" class="slider-input" oninput="document.getElementById('val_aero_front').innerText = this.value + ' Deg'">
+            </div>
+            <div>
+              <label class="label-rear">REAR: <span id="val_aero_rear" class="val-display">15 Deg</span></label><br>
+              <input type="range" id="aero_rear" name="aero_rear" min="0" max="30" value="15" class="slider-input" oninput="document.getElementById('val_aero_rear').innerText = this.value + ' Deg'">
+            </div>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label><strong>Final Ratio (Gearing): <span id="val_final_ratio" class="val-display">3.529</span></strong></label><br>
+          <input type="range" id="final_ratio" name="final_ratio" min="800" max="4000" value="3529" class="slider-single" oninput="document.getElementById('val_final_ratio').innerText = this.value / 1000.0">
+          <p class="help-text">Smaller values = longer gears (top speed). Larger values = acceleration.</p>
+        </div>
+
+        <div class="form-group">
+          <label><strong>Brake Force: <span id="val_brake_force" class="val-display">700 Nm</span></strong></label><br>
+          <input type="range" id="brake_force" name="brake_force" min="500" max="1400" value="700" class="slider-single" oninput="document.getElementById('val_brake_force').innerText = this.value + ' Nm'">
+          <p class="help-text">Maximum pressure. Optimal setting avoids locking until right before turning.</p>
+        </div>
+
+        <div class="form-group last">
+          <label><strong>Brake Balance (Rear to Front): <span id="val_brake_balance" class="val-display">65%</span></strong></label><br>
+          <input type="range" id="brake_balance" name="brake_balance" min="1" max="100" value="65" class="slider-single" oninput="document.getElementById('val_brake_balance').innerText = this.value + '%'">
+          <p class="help-text">Higher = more front bias. Adjust based on which wheels are locking first.</p>
+        </div>
+      </fieldset>
+
+      <fieldset class="setup-fieldset">
+        <legend class="setup-legend">Driver Algorithm Parameters</legend>
+
+        <div class="form-group">
+          <label><strong>Conservative Speed Estimation: <span id="val_algo_speed" class="val-display">0%</span></strong></label><br>
+          <input type="range" id="algo_speed" name="algo_speed" min="-100" max="100" value="0" class="slider-single" oninput="document.getElementById('val_algo_speed').innerText = this.value+ '%'">
+          <p class="help-text">Positive = slower/safer. Negative = overestimates speed, aggressive, higher accident risk.</p>
+        </div>
+
+        <div class="form-group">
+          <label><strong>Conservative Throttle: <span id="val_algo_throttle" class="val-display">0%</span></strong></label><br>
+          <input type="range" id="algo_throttle" name="algo_throttle" min="-100" max="100" value="0" class="slider-single" oninput="document.getElementById('val_algo_throttle').innerText = this.value+ '%'">
+          <p class="help-text">Positive = avoids wheel spin (safer/slower). Negative = aggressive throttle.</p>
+        </div>
+
+        <div class="form-group last">
+          <label><strong>Conservative Braking: <span id="val_algo_braking" class="val-display">0%</span></strong></label><br>
+          <input type="range" id="algo_braking" name="algo_braking" min="-100" max="100" value="0" class="slider-single" oninput="document.getElementById('val_algo_braking').innerText = this.value + '%'">
+          <p class="help-text">Positive = avoids locking, longer brake distance. Negative = aggressive, risks locking.</p>
+        </div>
+      </fieldset>
+
+      <fieldset class="setup-fieldset">
+        <legend class="setup-legend">Strategy Parameters</legend>
+
+        <div class="form-group last">
+          <label for="pit_lap"><strong>Target Pit Stop Lap:</strong></label><br>
+          <input type="number" id="pit_lap" name="pit_lap" min="1" max="150" class="num-input">
+          <p class="help-text" style="margin-top: 5px;">Energy load is auto-computed based on this lap. Consider traffic and tire wear.</p>
+        </div>
+      </fieldset>
+
+      <div class="form-actions">
+        <button type="button" class="reset-btn" onclick="resetFormDefaults()">
+          Reset to Default
+        </button>
+        <button type="button" class="submit-btn">
+          Submit Setup to Race Control
+        </button>
+      </div>
+
+    </form>
+
+  </main>
+  
+  <div id="footer"></div>
+  
+  <script>
+    // Navbar / Footer scripts
+    fetch("footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("footer").innerHTML = data;
+      });
+
+    // Custom Reset Function
+    function resetFormDefaults() {
+      // Find every input inside the form EXCEPT the driver name field
+      const inputs = document.querySelectorAll('.setup-form input:not(#driver_name)');
+      
+      inputs.forEach(input => {
+        // If it is a slider or a number input, reset it to its HTML default value
+        if (input.type === 'range' || input.type === 'number') {
+          input.value = input.defaultValue;
+          
+          // Dispatch an 'input' event to instantly trigger the inline oninput="..." logic
+          // This ensures the <span> elements update automatically without needing extra code!
+          input.dispatchEvent(new Event('input'));
+        }
+      });
+    }
+  </script>
+</body>
+
+</html>

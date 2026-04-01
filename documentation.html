@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROBOGP - Documentation</title>
+  <meta name="description" content="Documentation regarding ROBOGP.">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+  <script>
+    fetch("navbar.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("navbar").innerHTML = data;
+
+        // hamburger menu toggle
+        const toggle = document.querySelector(".menu-toggle");
+        const navlinks = document.querySelector(".nav-links");
+
+        toggle.addEventListener("click", () => {
+          navlinks.classList.toggle("show");
+        });
+
+        // highlight active link after navbar is loaded
+        const current = window.location.pathname.split("/").pop();
+        const links = document.querySelectorAll("#navbar ul a");
+        links.forEach(link => {
+          if (link.getAttribute("href") === current) {
+            link.classList.add("active");
+          }
+        });
+      });
+  </script>
+
+  <main>
+    <div class="text-container">
+      <h1>Driver specifications</h1>
+      <p>This is an AI racing simulation platform. Races are performed in a simulation environment by bots (computer
+        controlled car drivers). All bots use the same driving algorithm and car, and competitors are allowed to define
+        some parameters for their bots. Depending on these parameters, different performance levels can be achieved,
+        thus there exists the possibility of competing.</p>
+      <p>Driver specifications are the way to set different vehicle setup, AI driving algorithm parameters and strategy
+        for each driver. Competitors can send their specifications for an event through the Submit section in this web.
+        Available parameters are grouped in several categories.</p>
+      <h2>Vehicle setup parameters</h2>
+      <ul>
+        <li>Suspension stiffness: This mostly affects the springs. A higher setting results in faster chassis movements,
+          and an overall faster vehicle. But also can make the tyres to skip over bumps instead of keeping contact with
+          the ground, resulting in poor grip.</li>
+        <li>Suspension damping: The dampers adjustments are used to control how fast or slow the mass compress or
+          uncompress. The softer a shock absorber is, the faster the weight is transferred. The harder, the slower. This
+          allows to control different points of a corner (see below). So, for example, a car that understeers on turn
+          entries needs more weight on the front axis. This can be adjusted by either making the front compression
+          softer or reducing the rear decompression damping, so the rear end lifts up more and transfers more weight to
+          the front axis.</li>
+        <ul>
+          <li>Entry: The weight is transferred to the front axis. Front dampers compress and rear dampers uncompress.
+          </li>
+          <li>Apex: The weight it transferred to a side. Outside dampers are compressed and inside dampers are
+            uncompressed.</li>
+          <li>Exit: The weight is transferred to the rear of the car. Rear dampers compress and front dampers
+            uncompress.</li>
+        </ul>
+        <li>Anti-roll bar stiffness: The anti-roll bar adds roll resistance without resorting to an overly stiff spring.
+          This controls the amount of mass moved from side to side in turns. A stiff anti-roll bar setting increases
+          stability at the expense of a traction loss.</li>
+        <li>Ride height: Adjusts the distance between the ground and the vehicle. Lowering the vehicle center of gravity
+          usually means improved vehicle handling. Lowering too much can cause the vehicle occasionally hitting the
+          ground and so a loss of speed and control.</li>
+        <li>Camber: More negative camber makes the vehicle faster in a straight line due to a smaller tire patch
+          touching the ground. But this also reduces braking and accelerating abilities.</li>
+        <li>Tire pressure: More pressure means more speed in straights and more precise handling. Less pressure usually
+          adds grip, and so cornering is faster. The pressure is also related to tire temperature.</li>
+        <li>Aerodynamic setup: The airflow around the vehicle can be adjusted setting up the front and rear wings.
+          Higher settings usually add negative lift (downforce) which helps increasing the vehicle cornering speed, at
+          the expense of drag, which makes the vehicle slower in straights.</li>
+        <li>Final ratio: This allows to control the entire gear set to either favor acceleration or top speed. Smaller
+          values result in longer gears.</li>
+        <li>Brake force: The amount of pressure on the brake discs when full brake is applied. An optimal maximum force
+          setup does not lock the wheels until right before turning into the corner.</li>
+        <li>Brake balance: Brake balance adjusts the amount of pressure on the front and rear brakes. Higher values move
+          the braking pressure distribution to the front axis. Since under braking the weight is transferred to the
+          front axis, the rear axis gets less loaded and it's easier to lock the rear wheels. If front wheels are
+          locking while braking, the balance can be moved to the rear. If rear wheels are locking while braking, the
+          balance can be moved to the front. Front and rear axes should lock up at the same time for an optimal setting.
+        </li>
+      </ul>
+      <h2>Driver algorithm parameters</h2>
+      <ul>
+        <li>Conservative speed estimation: A more conservative turn speed and brake distance estimation (positive
+          values) makes the driver slower and safer. Overestimating speed (negative values) can increase speed but also
+          can make the driver slower if the drive-line is often lost, and even accidents can occur.</li>
+        <li>Conservative throttle: How much the driver tries to avoid wheels spinning when throttle is applied. Negative
+          values make the driver more aggressive with the throttle to the point it can lose control of the vehicle.
+          Positive values are safer but may be slower. This affects also the race start.</li>
+        <li>Conservative braking: How much the driver tries to avoid wheels locking when brake is applied. Negative
+          values make the driver more aggressive with the brakes to the point it can lock the wheels and become slower.
+          Positive values can avoid wheel locking but make braking distances longer than needed.</li>
+      </ul>
+      <h2>Strategy parameters</h2>
+      <ul>
+        <li>The amount of energy loaded in car for each stint is auto computed based on the lap to stop indication
+          provided by the specification, but this is just approximate. The final stop lap may not be exactly the one
+          specified. The fighting algorithm makes AI drivers losing time in battles. A strategy that avoids traffic can
+          be very effective. Also, consider tire wear.</li>
+      </ul>
+    </div>
+  </main>
+  <div id="footer"></div>
+  <script>
+    // Just add this block right below your existing navbar script!
+    fetch("footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("footer").innerHTML = data;
+      });
+  </script>
+</body>
+
+</html>

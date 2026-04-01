@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROBOGP - Rules</title>
+  <meta name="description" content="ROBOGP competition rules.">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+  <div id="navbar"></div>
+  <script>
+    fetch("navbar.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("navbar").innerHTML = data;
+
+        // hamburger menu toggle
+        const toggle = document.querySelector(".menu-toggle");
+        const navlinks = document.querySelector(".nav-links");
+
+        toggle.addEventListener("click", () => {
+          navlinks.classList.toggle("show");
+        });
+
+        // highlight active link after navbar is loaded
+        const current = window.location.pathname.split("/").pop();
+        const links = document.querySelectorAll("#navbar ul a");
+        links.forEach(link => {
+          if (link.getAttribute("href") === current) {
+            link.classList.add("active");
+          }
+        });
+      });
+  </script>
+
+  <main>
+    <div class="text-container">
+      <h1>General rules and definitions</h1>
+      <p>These regulations apply to the AI sim-racing platform. How it works: competitors provide an specification for
+        vehicle setup, AI driver algorithm parameters and strategy. Given the specifications, the racing events are
+        simulated by computer with no human intervention. Resulting simulation data is made available for analysis to
+        competitors as a potential improvement source for next session.</p>
+      <h2>Season championship</h2>
+      <p>The season championship is a set of scheduled puntuable events, where drivers and teams try to achieve the
+        maximum number of points.</p>
+      <h2>Events</h2>
+      <p>Events are scheduled in sessions. Session are one of these types:</p>
+      <ul>
+        <li>Practice: Practice sessions are for free testing. Drivers start from the pit-lane. Along the session time,
+          the drivers can make laps to the track. Although at the end of the session best lap times are reported, this
+          session does not add points to the championship standings or has any influence.</li>
+        <li>Qualifying: Qualifying sessions are used to establishing race start order. The procedure is the same as in
+          the practice session, with the exception that each driver's best lap defines its start position for a race
+          session.</li>
+        <li>Race: Drivers start from grid after the start lights turn off. The winner is the first driver to complete
+          all race laps. Races are puntuable.</li>
+      </ul>
+      <p>In all session types:</p>
+      <ul>
+        <li>Drivers are allowed to go through the pit-lane and make pit stops.</li>
+        <li>Laps where a driver has been outside the track limits are considered not valid and do not compute in the
+          final best lap time.</li>
+      </ul>
+      <p>Event regulations:</p>
+      <ul>
+        <li>A driver must participate in at least one practice session to be eligible for the qualifying and the race.
+        </li>
+        <li>A driver must be able regularly complete valid laps in the qualifying to be eligible with its specification
+          for the race. Drivers will be restored to their last valid specification for a track (or default, if there
+          isn't one) in other case.</li>
+      </ul>
+      <h2>Teams</h2>
+      <p>Teams are groups of drivers. All teams must have a different name and a different enough vehicle paint. Drivers
+        in the same team must wear different enough helmet colors.</p>
+      <h2>Drivers</h2>
+      <p>A driver is a virtual entity managed by a competitor. Each competitor in a championship manages one driver. The
+        competitor must define a unique name, team, helmet color to the driver. The competitor is responsible to follow
+        the event procedures to ensure proper participation of its driver.</p>
+      <h2>Simulation environment</h2>
+      <p>The sessions are simulated by computer at scheduled time. The organizer is responsible of managing the
+        simulation and satisfying schedules. All competitors are granted the possibility of being present along the
+        simulation execution. Telemetry, results and video are generated for each session. Standings must be updated
+        after each event.</p>
+      <h2>Event procedure</h2>
+      <p>This is the procedure for events:</p>
+      <ol>
+        <li>Event is scheduled and defined: sessions, track, vehicle, organizer... For each session is also defined
+          type, start time/date, and duration.</li>
+        <li>Reference lap telemetry and reference driver specification are made accessible to all competitors in this
+          site.</li>
+        <li>(For each session 1/2): Competitors must send their specifications as scheduled in case they want be granted
+          their participation with these parameters. An arbitrary specification for a driver is used in case the
+          organizer has not received new parameters.</li>
+        <li>(For each session 2/2): The session is executed. It can be live-streamed. Once finished, results and
+          telemetry are made available.</li>
+      </ol>
+      <p>The organization does not grant that competitor's specifications are stored after a session, and that telemetry
+        is available more than 2 weeks after an event has finished. Competitors must manage their own copy of the data
+        they consider meaningful.</p>
+      <h1>Specific rules for current season</h1>
+      <p>The regulations are under development and can change along the season.</p>
+      <ul>
+        <li>Teams must have two drivers.</li>
+        <li>Practice sessions can be used to tune the driver specifications. After this, qualifying and race are run
+          with the exact same profile, including the strategy parameters.</li>
+        <li>Race start order is the same than the qualifying session results.</li>
+        <li>At least one pit stop is required for all drivers in race sessions. Drivers without a pit stop are
+          disqualified.</li>
+        <li>Awarded points for the first 8 drivers in an event are: 8, 7, 6, 5, 4, 3, 2, 1. Drivers not finishing the
+          race do not compute points.</li>
+      </ul>
+    </div>
+  </main>
+  <div id="footer"></div>
+  <script>
+    // Just add this block right below your existing navbar script!
+    fetch("footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("footer").innerHTML = data;
+      });
+  </script>
+</body>
+
+</html>

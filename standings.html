@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ROBOGP - Standings</title>
+  <meta name="description" content="ROBOGP Championship Standings">
+  <link rel="icon" href="/favicon.ico" type="image/x-icon">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div id="navbar"></div>
+  <script>
+    fetch("navbar.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("navbar").innerHTML = data;
+        document.querySelector(".menu-toggle").addEventListener("click", () => {
+          document.querySelector(".nav-links").classList.toggle("show");
+        });
+        const current = window.location.pathname.split("/").pop();
+        document.querySelectorAll("#navbar ul a").forEach(link => {
+          if (link.getAttribute("href") === current) link.classList.add("active");
+        });
+      });
+  </script>
+
+  <main>
+    <div class="data-container">
+      
+      <div class="event-header">
+        <div class="event-badge">S1</div>
+        <div class="event-info">
+          <h1>2018</h1>
+          <p>Official Championship Standings</p>
+        </div>
+      </div>
+
+      <div class="table-responsive">
+        <table class="data-table table-center">
+          <thead>
+            <tr>
+              <th>Pos</th>
+              <th>Driver</th>
+              <th>Team</th>
+              <th>E1BC</th>
+              <th>E2FU</th>
+              <th>E3HO</th>
+              <th>E4MZ</th>
+              <th class="total-col">Total</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td><strong>Jontrax</strong></td>
+              <td>WEY</td>
+              <td class="win">5</td>
+              <td class="podium">4</td>
+              <td class="win">5</td>
+              <td>-</td>
+              <td class="total-col">14</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td><strong>Ricardo</strong></td>
+              <td>SGP</td>
+              <td>-</td>
+              <td class="win">5</td>
+              <td>1</td>
+              <td class="win">5</td>
+              <td class="total-col">11</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td><strong>Vicente</strong></td>
+              <td>WGP</td>
+              <td class="podium">4</td>
+              <td>2</td>
+              <td>-</td>
+              <td class="podium">4</td>
+              <td class="total-col">10</td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td><strong>Jaquim</strong></td>
+              <td>MOT</td>
+              <td>-</td>
+              <td class="podium">3</td>
+              <td>-</td>
+              <td class="podium">3</td>
+              <td class="total-col">6</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </main>
+  <div id="footer"></div>
+  <script>
+    // Just add this block right below your existing navbar script!
+    fetch("footer.html")
+      .then(response => response.text())
+      .then(data => {
+        document.getElementById("footer").innerHTML = data;
+      });
+  </script>
+</body>
+</html>
