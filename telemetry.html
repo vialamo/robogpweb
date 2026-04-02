@@ -178,7 +178,7 @@
 
       const layout1 = {
         xaxis: { showticklabels: false, domain: alignDomain },
-        yaxis: { title: 'Speed', titlefont: { color: '#1f77b4' }, tickfont: { color: '#1f77b4' } },
+        yaxis: { title: 'Speed (km/h)', titlefont: { color: '#1f77b4' }, tickfont: { color: '#1f77b4' } }, // Updated Unit
         yaxis2: { title: 'RPM', titlefont: { color: '#ff7f0e' }, tickfont: { color: '#ff7f0e' }, overlaying: 'y', side: 'right', showgrid: false },
         yaxis3: { title: 'Gear', titlefont: { color: '#2ca02c' }, tickfont: { color: '#2ca02c' }, overlaying: 'y', side: 'right', anchor: 'free', position: 1, showgrid: false },
         margin: { l: 60, r: 120, t: 10, b: 0 },
@@ -208,7 +208,7 @@
 
       const layout3 = {
         xaxis: { showticklabels: false, domain: alignDomain },
-        yaxis: { title: 'Whl speed' },
+        yaxis: { title: 'Whl speed (rad/s)' }, // Updated Unit
         margin: { l: 60, r: 120, t: 0, b: 0 }, 
         hovermode: 'x unified'
       };
@@ -222,7 +222,7 @@
 
       const layout4 = {
         xaxis: { title: 'Distance (m)', domain: alignDomain },
-        yaxis: { title: 'Travel' },
+        yaxis: { title: 'Travel (m)' }, // Updated Unit
         margin: { l: 60, r: 120, t: 0, b: 40 },
         hovermode: 'x unified'
       };
